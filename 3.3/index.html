@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Soft blue-purple gradient */
+      background: linear-gradient(135deg, #d9e7ff, #e6d9ff);
+    }
+    .container {
+      border: 2px solid #000;
+      padding: 20px;
+      background: #f5f5ff; /* soft neutral inside */
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .toolbar {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    select {
+      padding: 6px;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+    svg {
+      border: 2px solid #555;
+      background-color: #ffffff;
+      cursor: crosshair;
+      display: block;
+      margin: auto;
+      width: 800px;  /* wide */
+      height: 400px; /* a bit less tall */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>DRAWING BOARD</h2>
+    <div class="toolbar">
+      <label for="colorPicker"><b>Choose Pen Color:</b></label>
+      <select id="colorPicker">
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+        <option value="blue" selected>Blue</option>
+        <option value="green">Green</option>
+        <option value="black">Black</option>
+      </select>
+    </div>
+    <svg id="drawingArea"></svg>
+  </div>
+
+  <script>
+    const svg = document.getElementById("drawingArea");
+    const colorPicker = document.getElementById("colorPicker");
+    let isDrawing = false;
+    let currentPath = null;
+    let currentColor = colorPicker.value;
+
+    colorPicker.addEventListener("change", () => {
+      currentColor = colorPicker.value;
+    });
+
+    svg.addEventListener("mousedown", (e) => {
+      isDrawing = true;
+      const x = e.offsetX;
+      const y = e.offsetY;
+
+      currentPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      currentPath.setAttribute("stroke", currentColor);
+      currentPath.setAttribute("stroke-width", "2");
+      currentPath.setAttribute("fill", "none");
+      currentPath.setAttribute("d", `M ${x} ${y}`);
+      svg.appendChild(currentPath);
+    });
+
+    svg.addEventListener("mousemove", (e) => {
+      if (!isDrawing) return;
+      const x = e.offsetX;
+      const y = e.offsetY;
+
+      let d = currentPath.getAttribute("d");
+      d += ` L ${x} ${y}`;
+      currentPath.setAttribute("d", d);
+    });
+
+    svg.addEventListener("mouseup", () => {
+      isDrawing = false;
+      currentPath = null;
+    });
+
+    svg.addEventListener("mouseleave", () => {
+      isDrawing = false;
+      currentPath = null;
+    });
+  </script>
+
+</body>
+</html>
