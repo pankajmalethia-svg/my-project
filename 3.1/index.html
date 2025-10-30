@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Live Character Counter</title>
+<style>
+  /* global box-sizing so widths include padding/border */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+  }
+
+  .counter-box {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    padding: 22px;
+    width: 480px;              /* card width */
+    max-width: calc(100% - 40px);
+    text-align: center;
+    /* <- clip any child overflow so inner corners/borders won't escape */
+    overflow: hidden;
+  }
+
+  h3 {
+    color: #222;
+    margin: 0 0 12px 0;
+    font-size: 1.25rem;
+  }
+
+  /* put the textarea inside a wrapper so padding is consistent */
+  .ta-wrap {
+    padding: 6px;              /* inner gap between textarea and card edge */
+  }
+
+  textarea {
+    /* width includes padding/border because of box-sizing above */
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    font-size: 14px;
+    border: 2px solid #74b9ff;
+    border-radius: 8px;        /* smaller than card radius so it stays inside */
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    resize: vertical;          /* allow vertical resize only */
+    background: #fff;
+    display: block;
+  }
+
+  textarea:focus {
+    border-color: #0984e3;
+    box-shadow: 0 0 8px rgba(9,132,227,0.25);
+  }
+
+  .count {
+    margin-top: 14px;
+    font-weight: 700;
+    color: #0984e3;
+  }
+
+  /* responsive small-screen tweak */
+  @media (max-width: 520px) {
+    .counter-box { padding: 16px; width: 92%; }
+    textarea { height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="counter-box" role="region" aria-label="Live character counter card">
+    <h3>Live Character Counter</h3>
+
+    <!-- wrapper ensures the textarea has a small gap from the card edges -->
+    <div class="ta-wrap">
+      <textarea id="textInput" placeholder="Start typing..." aria-label="Type your text here"></textarea>
+    </div>
+
+    <div class="count" id="countLabel">Characters: <span id="charCount">0</span></div>
+  </div>
+
+<script>
+  const textarea = document.getElementById('textInput');
+  const charCount = document.getElementById('charCount');
+
+  textarea.addEventListener('input', () => {
+    charCount.textContent = textarea.value.length;
+  });
+</script>
+
+</body>
+</html>
